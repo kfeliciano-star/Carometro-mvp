@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<title>Carômetro · Link School of Business</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --navy: #10284e;
+    --navy-2: #1a3766;
+    --navy-3: #0a1a33;
+    --yellow: #fec641;
+    --yellow-dark: #e6b238;
+    --steel: #546484;
+    --text: #f4f6fb;
+    --muted: #a9b3c7;
+    --panel: #17325c;
+    --border: rgba(255,255,255,0.12);
+    --radius: 14px;
+    --font: 'Aeonik', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--navy); color: var(--text); font-family: var(--font); }
+  body { min-height: 100vh; }
+
+  /* GATE */
+  #gate { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; background: var(--navy); }
+  .gate-brand {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-3) 100%);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 48px;
+  }
+  .gate-brand::before {
+    content: ''; position: absolute; right: -180px; top: -180px;
+    width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(254,198,65,0.25) 0%, rgba(254,198,65,0) 70%);
+    pointer-events: none;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .logo .dot { width: 14px; height: 14px; background: var(--yellow); border-radius: 50%; display: inline-block; }
+  .brand-copy { position: relative; z-index: 1; }
+  .brand-copy h2 {
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 1.05; font-weight: 700; letter-spacing: -0.02em;
+    margin: 0 0 20px; color: var(--text);
+  }
+  .brand-copy h2 em { font-style: normal; color: var(--yellow); }
+  .brand-copy p { font-size: 16px; color: var(--muted); max-width: 440px; line-height: 1.5; margin: 0; }
+  .brand-footer { color: var(--steel); font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .gate-form-wrap { background: #fff; display: flex; align-items: center; justify-content: center; padding: 48px; }
+  .gate-form { width: 100%; max-width: 380px; color: var(--navy); }
+  .gate-form h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--navy); }
+  .gate-form .sub { color: var(--steel); font-size: 15px; margin: 0 0 32px; }
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+  .field input {
+    width: 100%; padding: 13px 16px;
+    background: #fff; color: var(--navy);
+    border: 1.5px solid #dde3ee; border-radius: 10px;
+    font-size: 15px; font-family: var(--font); outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder { color: #aab3c4; }
+  .field input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(16,40,78,0.08); }
+  .field.error input { border-color: #e05555; }
+  .btn-primary {
+    width: 100%; padding: 14px;
+    background: var(--yellow); color: var(--navy);
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700; font-family: var(--font);
+    cursor: pointer; transition: background .15s, transform .1s;
+  }
+  .btn-primary:hover { background: var(--yellow-dark); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: wait; }
+  .err-msg { color: #c93636; font-size: 13px; margin-top: 12px; min-height: 18px; }
+  .helper { text-align: center; margin-top: 28px; color: var(--steel); font-size: 13px; }
+  @media (max-width: 860px) {
+    #gate { grid-template-columns: 1fr; }
+    .gate-brand { padding: 32px; min-height: 220px; }
+    .brand-copy h2 { font-size: 32px; }
+    .gate-form-wrap { padding: 32px 24px; }
+  }
+
+  /* APP */
+  #app { display: none; min-height: 100vh; background: var(--navy); }
+  header.app-header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(16,40,78,0.95); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px 16px;
+  }
+  .app-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .app-top .logo { font-size: 22px; }
+  .app-top .logo .dot { width: 12px; height: 12px; }
+  .app-top .divider { width: 1px; height: 22px; background: var(--border); }
+  .app-top .page-title { font-size: 15px; color: var(--muted); font-weight: 500; }
+  .logout-btn {
+    margin-left: auto; background: transparent; border: 1px solid var(--border);
+    color: var(--muted); padding: 8px 14px; border-radius: 8px;
+    font-size: 13px; cursor: pointer; font-family: var(--font);
+    transition: all .15s;
+  }
+  .logout-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+  .controls { margin-top: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .search { flex: 1 1 340px; min-width: 260px; position: relative; }
+  .search input {
+    width: 100%; padding: 12px 14px 12px 44px;
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    font-size: 15px; outline: none; font-family: var(--font);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search input::placeholder { color: var(--steel); }
+  .search input:focus { border-color: var(--yellow); box-shadow: 0 0 0 3px rgba(254,198,65,0.15); }
+  .search svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--steel); }
+  select {
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-size: 14px; cursor: pointer; outline: none;
+    font-family: var(--font);
+  }
+  select:focus { border-color: var(--yellow); }
+  .count { color: var(--muted); font-size: 13px; margin-left: auto; }
+  main.app-main { padding: 28px 32px 80px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--yellow); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .photo-wrap { aspect-ratio: 1 / 1; background: var(--navy-3); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .placeholder {
+    font-size: 38px; font-weight: 700; color: var(--yellow);
+    background: linear-gradient(135deg, var(--navy-2), var(--navy-3));
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .meta { padding: 12px 14px 14px; }
+  .name { font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--text);
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .turma { font-size: 11px; color: var(--yellow); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .empty { text-align: center; color: var(--muted); padding: 80px 20px; font-size: 15px; }
+  mark { background: rgba(254,198,65,0.3); color: var(--yellow); padding: 0 3px; border-radius: 3px; }
+  .loading { text-align: center; padding: 80px 20px; color: var(--muted); font-size: 14px; }
+  @media (max-width: 600px) {
+    header.app-header { padding: 14px 16px 14px; }
+    main.app-main { padding: 20px 16px 80px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; }
+    .count { width: 100%; margin-left: 0; }
+    .logout-btn { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<section id="gate">
+  <div class="gate-brand">
+    <div class="logo"><span class="dot"></span><span>Link</span></div>
+    <div class="brand-copy">
+      <h2>Conheça <em>cada aluno</em> da Link pelo nome e pelo rosto.</h2>
+      <p>O Carômetro unifica todas as turmas em um único lugar, com busca instantânea e identificação rápida por foto.</p>
+    </div>
+    <div class="brand-footer">Link School of Business · 2026.1</div>
+  </div>
+  <div class="gate-form-wrap">
+    <form class="gate-form" id="loginForm" autocomplete="off" novalidate>
+      <h1>Acesso restrito</h1>
+      <p class="sub">Digite a senha para entrar no Carômetro.</p>
+      <div class="field" id="passField">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" placeholder="Digite a senha" required autofocus>
+      </div>
+      <button type="submit" class="btn-primary" id="submitBtn">Entrar no Carômetro</button>
+      <div class="err-msg" id="errMsg"></div>
+      <div class="helper">Acesso restrito à comunidade Link.</div>
+    </form>
+  </div>
+</section>
+
+<section id="app">
+  <header class="app-header">
+    <div class="app-top">
+      <div class="logo"><span class="dot"></span><span>Link</span></div>
+      <span class="divider"></span>
+      <span class="page-title">Carômetro · 2026.1</span>
+      <button class="logout-btn" id="logoutBtn" type="button">Sair</button>
+    </div>
+    <div class="controls">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="q" type="search" placeholder="Buscar aluno por nome…" autocomplete="off">
+      </div>
+      <select id="turmaFilter"><option value="">Todas as turmas</option></select>
+      <span class="count" id="count"></span>
+    </div>
+  </header>
+  <main class="app-main">
+    <div id="loading" class="loading">Carregando alunos…</div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" style="display:none;">Nenhum aluno encontrado.</div>
+  </main>
+</section>
+
+<script>
+(function(){
+  const PASS_HASH = 'd3d357987c421adc4189a39a87d42b44383b116409d5e398119cacdc63356c50';
+  const DATA_URL = 'carometro.json';
+
+  const form = document.getElementById('loginForm');
+  const errMsg = document.getElementById('errMsg');
+  const gateEl = document.getElementById('gate');
+  const appEl = document.getElementById('app');
+  const submitBtn = document.getElementById('submitBtn');
+  let data = null;
+
+  async function sha256(text) {
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function loadData() {
+    if (data) return data;
+    const res = await fetch(DATA_URL, { cache: 'force-cache' });
+    if (!res.ok) throw new Error('Falha ao carregar dados (' + res.status + ')');
+    data = await res.json();
+    return data;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pass = document.getElementById('password').value;
+    errMsg.textContent = '';
+    document.getElementById('passField').classList.remove('error');
+
+    if (!pass) {
+      document.getElementById('passField').classList.add('error');
+      errMsg.textContent = 'Digite a senha de acesso.';
+      return;
+    }
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verificando…';
+    try {
+      const h = await sha256(pass);
+      if (h !== PASS_HASH) {
+        document.getElementById('passField').classList.add('error');
+        errMsg.textContent = 'Senha incorreta.';
+        return;
+      }
+      submitBtn.textContent = 'Carregando…';
+      await loadData();
+      gateEl.style.display = 'none';
+      appEl.style.display = 'block';
+      initCarometro(data);
+      setTimeout(() => document.getElementById('q')?.focus(), 50);
+    } catch (err) {
+      errMsg.textContent = 'Erro: ' + err.message;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Entrar no Carômetro';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    appEl.style.display = 'none';
+    gateEl.style.display = 'grid';
+    document.getElementById('password').value = '';
+    window.scrollTo(0, 0);
+    document.getElementById('password').focus();
+  });
+
+  let initialized = false;
+  function initCarometro(data) {
+    if (initialized) return;
+    initialized = true;
+    document.getElementById('loading').style.display = 'none';
+    const turmas = data.turmas;
+    const alunos = data.alunos;
+    const norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    alunos.forEach(a => { a._n = norm(a.n); });
+
+    const sel = document.getElementById('turmaFilter');
+    const sortedTurmas = turmas.map((t, i) => ({...t, _i: i})).sort((a,b) => a.semestre - b.semestre || a.label.localeCompare(b.label));
+    sortedTurmas.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t._i;
+      opt.textContent = t.label;
+      sel.appendChild(opt);
+    });
+
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    const countEl = document.getElementById('count');
+    const q = document.getElementById('q');
+
+    function initials(name) {
+      const parts = name.trim().split(/\s+/);
+      const first = parts[0]?.[0] || '';
+      const last = parts.length > 1 ? parts[parts.length-1][0] : '';
+      return (first + last).toUpperCase();
+    }
+    function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function highlight(name, term) {
+      if (!term) return escapeHtml(name);
+      const nName = norm(name);
+      const idx = nName.indexOf(term);
+      if (idx < 0) return escapeHtml(name);
+      return escapeHtml(name.slice(0, idx)) + '<mark>' + escapeHtml(name.slice(idx, idx+term.length)) + '</mark>' + escapeHtml(name.slice(idx+term.length));
+    }
+    function render() {
+      const term = norm(q.value.trim());
+      const turmaIdx = sel.value === '' ? -1 : parseInt(sel.value);
+      const filtered = alunos.filter(a => {
+        if (turmaIdx >= 0 && a.t !== turmaIdx) return false;
+        if (term && !a._n.includes(term)) return false;
+        return true;
+      });
+      filtered.sort((a,b) => a.t - b.t || a.n.localeCompare(b.n, 'pt-BR'));
+      countEl.textContent = filtered.length + ' aluno' + (filtered.length === 1 ? '' : 's');
+      if (filtered.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+      const frag = document.createDocumentFragment();
+      filtered.forEach(a => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const turma = turmas[a.t];
+        const photoHtml = a.f
+          ? '<img loading="lazy" src="' + a.f + '" alt="">'
+          : '<div class="placeholder">' + initials(a.n) + '</div>';
+        card.innerHTML =
+          '<div class="photo-wrap">' + photoHtml + '</div>' +
+          '<div class="meta">' +
+            '<div class="name">' + highlight(a.n, term) + '</div>' +
+            '<div class="turma">' + escapeHtml(turma.label) + '</div>' +
+          '</div>';
+        frag.appendChild(card);
+      });
+      grid.innerHTML = '';
+      grid.appendChild(frag);
+    }
+    let t;
+    q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(render, 80); });
+    sel.addEventListener('change', render);
+    document.addEventListener('keydown', e => {
+      if (appEl.style.display !== 'block') return;
+      if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+      if (e.key === 'Escape' && document.activeElement === q) { q.value = ''; render(); }
+    });
+    render();
+  }
+})();
+</script>
+</body>
+</html>
